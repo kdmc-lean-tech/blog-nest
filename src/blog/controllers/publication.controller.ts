@@ -1,10 +1,13 @@
-import { Controller, Get, Body, UsePipes, ValidationPipe, Post, Put, Param, ParseIntPipe, Delete, UseInterceptors, UploadedFile, Res } from '@nestjs/common';
+import { Controller, Get, Body, UsePipes, ValidationPipe, Post, Put, Param, ParseIntPipe, Delete, UseInterceptors, UploadedFile, Res, UseGuards, Req, SetMetadata } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { PublicationService } from '../services/publication.service';
 import { CreatePublicationDto } from '../../dtos/create-publication.dto';
 import { diskStorage } from 'multer';
 import { editFileName, imageFileFilter } from 'src/utils/file-upload.utils';
 import { IFile } from '../../interfaces/file';
+import { AuthGuard } from '@nestjs/passport';
+import { ROLES } from '../../enums/roles.enum';
+import { Roles } from '../../decorators/roles.decorator';
 
 @Controller('publication')
 export class PublicationController {
@@ -17,6 +20,8 @@ export class PublicationController {
     }
 
     @Get('/:id')
+    @UseGuards(AuthGuard('jwt'))
+    @Roles(ROLES.USER, ROLES.ADMIN)
     async getPublicationById(@Param('id', ParseIntPipe) id: number) {
         return await this._publicationService.getPublicationById(id);
     }
