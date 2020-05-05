@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PublicationRepository } from '../repository/publication.repository';
-import { Publication } from '../../models/publication.entity';
-import { CreatePublicationDto } from '../../dtos/create-publication.dto';
+import { Publication } from '../../../models/publication.entity';
+import { CreatePublicationDto } from '../../../dtos/create-publication.dto';
+import { User } from '../../../models/user.entity';
 
 @Injectable()
 export class PublicationService {
@@ -12,12 +13,12 @@ export class PublicationService {
         return await this._publicationRepository.getAllPublications();
     }
 
-    async createPublication(createPublicationDto: CreatePublicationDto): Promise<Publication> {
-        return await this._publicationRepository.createPublication(createPublicationDto);
+    async createPublication(createPublicationDto: CreatePublicationDto, user: User): Promise<Publication> {
+        return await this._publicationRepository.createPublication(createPublicationDto, user);
     }
 
     async updatePublicationById(id: number, createPublicationDto: CreatePublicationDto): Promise<Publication> {
-        const publication = await this._publicationRepository.findOne(id);
+        const publication = await this._publicationRepository.getPublicationById(id);
         if (!publication) {
             throw new NotFoundException(`The id ${id} not found`);
         }
@@ -25,7 +26,7 @@ export class PublicationService {
     }
 
     async getPublicationById(id: number): Promise<Publication> {
-        const publication = await this._publicationRepository.findOne(id);
+        const publication = await this._publicationRepository.getPublicationById(id);
         if (!publication) {
             throw new NotFoundException(`The id ${id} not found`);
         }
@@ -33,7 +34,7 @@ export class PublicationService {
     }
 
     async deletePublicationById(id: number): Promise<Publication> {
-        const publication = await this._publicationRepository.findOne(id);
+        const publication = await this._publicationRepository.getPublicationById(id);
         if (!publication) {
             throw new NotFoundException(`The id ${id} not found`);
         }
@@ -41,7 +42,7 @@ export class PublicationService {
     }
 
     async fileUploadById(id: number, path: string): Promise<Publication> {
-        const publication = await this._publicationRepository.findOne(id);
+        const publication = await this._publicationRepository.getPublicationById(id);
         if (!publication) {
             throw new NotFoundException(`The id ${id} not found`);
         }

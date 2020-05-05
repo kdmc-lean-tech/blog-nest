@@ -1,11 +1,11 @@
 import { Repository, EntityRepository } from "typeorm";
-import { User } from '../../models/user.entity';
-import { CreateUserDto } from '../../dtos/create-user.dto';
+import { User } from '../../../models/user.entity';
+import { CreateUserDto } from '../../../dtos/create-user.dto';
 import { InternalServerErrorException, ConflictException, UnauthorizedException } from "@nestjs/common";
-import { encryptPassword, comparePassword } from '../../utils/encrypt.utils';
+import { encryptPassword, comparePassword } from '../../../utils/encrypt.utils';
 
 @EntityRepository(User)
-export class UserRepository extends Repository<User> {
+export class AuthRepository extends Repository<User> {
     
     public async signUp(createUserDto: CreateUserDto): Promise<User> {
         const { username, email, password } = createUserDto;

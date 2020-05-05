@@ -1,5 +1,6 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn } from 'typeorm';
 import { ROLES } from '../enums/roles.enum';
+import { Publication } from './publication.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -16,7 +17,10 @@ export class User extends BaseEntity {
     @Column({ type: 'varchar', default: ROLES.USER })
     rol: ROLES;
     @Column({ type: 'timestamp', name: 'created_at' })
-    created_at: Date
+    created_at: Date;
     @Column({ type: 'timestamp', name: 'updated_at' })
-    updated_at: Date
+    updated_at: Date;
+    @OneToMany(type => Publication, publication => publication.user, { eager: true })
+    @JoinColumn()
+    publications: Publication[];
 }

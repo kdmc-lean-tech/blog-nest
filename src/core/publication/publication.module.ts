@@ -13,4 +13,4 @@ import { PublicationRepository } from './repository/publication.repository';
     ],
     controllers: [PublicationController]
 })
-export class BlogModule {}
+export class PublicationModule {}

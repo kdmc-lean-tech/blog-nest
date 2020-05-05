@@ -1,18 +1,22 @@
 import { EntityRepository, Repository, QueryBuilder } from 'typeorm';
-import { InternalServerErrorException } from '@nestjs/common';
-import { Publication } from '../../models/publication.entity';
-import { CreatePublicationDto } from '../../dtos/create-publication.dto';
-import { deleteImgCloud, uploadFileCloud } from '../../utils/upload-cloudinary';
+import { InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { Publication } from '../../../models/publication.entity';
+import { CreatePublicationDto } from '../../../dtos/create-publication.dto';
+import { deleteImgCloud, uploadFileCloud } from '../../../utils/upload-cloudinary';
+import { User } from '../../../models/user.entity';
 
 @EntityRepository(Publication)
 export class PublicationRepository extends Repository<Publication> {
     
     public async getAllPublications(): Promise<Publication[]> {
-        const query = this.createQueryBuilder();
-        return query.getMany();
-    }
+        const publications = await this.createQueryBuilder("publication")
+            .leftJoinAndSelect("publication.user", "user")
+            .getMany();
+        publications.map((p) => delete p.user['password']);
+        return publications;
+    }   
 
-    public async createPublication(createPublicationDto: CreatePublicationDto): Promise<Publication> {
+    public async createPublication(createPublicationDto: CreatePublicationDto, user: User): Promise<Publication> {
         const { title, subtitle, content } = createPublicationDto;
         const publication = new Publication();
         publication.title = title;
@@ -22,6 +26,7 @@ export class PublicationRepository extends Repository<Publication> {
         publication.public_id = "";
         publication.created_at = new Date();
         publication.updated_at = new Date();
+        publication.user = user;
         try {
             await publication.save();
             return publication;
@@ -30,8 +35,8 @@ export class PublicationRepository extends Repository<Publication> {
         }
     }
 
-    public async updatePublicationById(publication: Publication, createPublicationDto: CreatePublicationDto): Promise<Publication> {
-        const { title, subtitle, content  } = createPublicationDto;
+    async updatePublicationById(publication: Publication, createPublicationDto: CreatePublicationDto): Promise<Publication> {
+        const { title, subtitle, content } = createPublicationDto;
         publication.title = title;
         publication.subtitle = subtitle;
         publication.content = content;
@@ -72,4 +77,13 @@ export class PublicationRepository extends Repository<Publication> {
             throw new InternalServerErrorException(err);
         }
     }
+
+    public async getPublicationById(id: number): Promise<Publication> {
+        const publication = await this.createQueryBuilder("publication")
+            .leftJoinAndSelect("publication.user", "user")
+            .where(`publication.id = :idPublication`, { idPublication: id })
+            .getOne();
+        delete publication.user["password"];
+        return publication;
+    }   
 }

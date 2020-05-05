@@ -1,15 +1,15 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
-import { BlogModule } from './blog/blog.module';
+import { PublicationModule } from './core/publication/publication.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmOptions } from './config/typeorm.config';
 import { MulterModule } from '@nestjs/platform-express';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './core/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './guards/roles/roles.guard';
 import { UserMiddleware } from './middlewares/user.middleware';
 
 @Module({
-  imports: [BlogModule, TypeOrmModule.forRoot(typeOrmOptions), 
+  imports: [PublicationModule, TypeOrmModule.forRoot(typeOrmOptions), 
     MulterModule.register({ dest: './uploads' }), AuthModule],
   providers: [
     {

@@ -1,4 +1,5 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
+import { User } from './user.entity';
 
 @Entity() 
 export class Publication extends BaseEntity{
@@ -15,7 +16,10 @@ export class Publication extends BaseEntity{
     @Column({ type: 'varchar', nullable: false })
     content: string;
     @Column({ type: 'timestamp', name: 'created_at' })
-    created_at: Date
+    created_at: Date;
     @Column({ type: 'timestamp', name: 'updated_at' })
-    updated_at: Date
+    updated_at: Date;
+    @ManyToOne(type => User, user => user.publications, { eager: false })
+    @JoinColumn({ name: "user_id" })
+    user: User;
 }

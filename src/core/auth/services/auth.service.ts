@@ -1,23 +1,23 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserRepository } from '../repository/user.repository';
-import { CreateUserDto } from '../../dtos/create-user.dto';
-import { User } from '../../models/user.entity';
-import { CredentialsDto } from '../../dtos/credentials.dto';
+import { AuthRepository } from '../repository/auth.repository';
+import { CreateUserDto } from '../../../dtos/create-user.dto';
+import { User } from '../../../models/user.entity';
+import { CredentialsDto } from '../../../dtos/credentials.dto';
 import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class AuthService {
-    constructor(private _userRepository: UserRepository, private _jwtService: JwtService) {
+    constructor(private _authRepository: AuthRepository, private _jwtService: JwtService) {
     }
 
     async signUp(createUserDto: CreateUserDto): Promise<User> {
-        return await this._userRepository.signUp(createUserDto);
+        return await this._authRepository.signUp(createUserDto);
     }
 
     async signIn(credentialsDto: CredentialsDto): Promise<{ token: string }> {
         const { email, password } = credentialsDto;
-        const user = await this._userRepository.findOne({ email });
-        const username = await this._userRepository.verifyUserPassword(email, password);
+        const user = await this._authRepository.findOne({ email });
+        const username = await this._authRepository.verifyUserPassword(email, password);
         if (!username) {
             throw new UnauthorizedException(`Invalid credentials`);
         }
