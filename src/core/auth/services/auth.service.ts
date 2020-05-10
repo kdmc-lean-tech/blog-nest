@@ -4,6 +4,7 @@ import { CreateUserDto } from '../../../dtos/create-user.dto';
 import { User } from '../../../models/user.entity';
 import { CredentialsDto } from '../../../dtos/credentials.dto';
 import { JwtService } from "@nestjs/jwt";
+import { decryptPasswordClient } from '../../../utils/encrypt.utils';
 
 @Injectable()
 export class AuthService {
@@ -15,6 +16,7 @@ export class AuthService {
     }
 
     async signIn(credentialsDto: CredentialsDto): Promise<{ token: string }> {
+        credentialsDto.password = decryptPasswordClient(credentialsDto.password); 
         const { email, password } = credentialsDto;
         const user = await this._authRepository.findOne({ email });
         const username = await this._authRepository.verifyUserPassword(email, password);

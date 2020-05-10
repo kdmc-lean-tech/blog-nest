@@ -17,9 +17,12 @@ export class User extends BaseEntity {
     @Column({ type: 'varchar', default: ROLES.USER })
     rol: ROLES;
     @Column({ type: 'timestamp', name: 'created_at' })
-    created_at: Date;
+    createdAt: Date;
+    @Column({ type: 'bool', nullable: false })
+    active: boolean;
     @Column({ type: 'timestamp', name: 'updated_at' })
-    updated_at: Date;
+    updatedAt: Date;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     @OneToMany(type => Publication, publication => publication.user, { eager: true })
     @JoinColumn()
     publications: Publication[];

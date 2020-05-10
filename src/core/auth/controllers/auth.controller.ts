@@ -3,7 +3,7 @@ import { AuthService } from '../services/auth.service';
 import { CreateUserDto } from '../../../dtos/create-user.dto';
 import { CredentialsDto } from '../../../dtos/credentials.dto';
 
-@Controller('auth')
+@Controller('api/authentications')
 export class AuthController {
     constructor(private _authService: AuthService) {
     }
@@ -14,7 +14,7 @@ export class AuthController {
         return await this._authService.signUp(createUserDto);
     }
 
-    @Post('/signin')
+    @Post('/login')
     @UsePipes(ValidationPipe)
     async signIn(@Body() credentialsDto: CredentialsDto) {
         return await this._authService.signIn(credentialsDto);

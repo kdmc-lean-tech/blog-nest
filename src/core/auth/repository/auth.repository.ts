@@ -1,7 +1,7 @@
 import { Repository, EntityRepository } from "typeorm";
 import { User } from '../../../models/user.entity';
 import { CreateUserDto } from '../../../dtos/create-user.dto';
-import { InternalServerErrorException, ConflictException, UnauthorizedException } from "@nestjs/common";
+import { InternalServerErrorException, ConflictException } from "@nestjs/common";
 import { encryptPassword, comparePassword } from '../../../utils/encrypt.utils';
 
 @EntityRepository(User)

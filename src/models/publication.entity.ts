@@ -1,4 +1,4 @@
-import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, BaseEntity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from './user.entity';
 
 @Entity() 
@@ -12,13 +12,14 @@ export class Publication extends BaseEntity{
     @Column({ type: 'varchar', nullable: false })
     img: string;
     @Column({ type: 'varchar', nullable: false })
-    public_id: string;
+    publicImgId: string;
     @Column({ type: 'varchar', nullable: false })
     content: string;
     @Column({ type: 'timestamp', name: 'created_at' })
-    created_at: Date;
+    createdAt: Date;
     @Column({ type: 'timestamp', name: 'updated_at' })
-    updated_at: Date;
+    updatedAt: Date;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     @ManyToOne(type => User, user => user.publications, { eager: false })
     @JoinColumn({ name: "user_id" })
     user: User;

@@ -6,10 +6,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
   cloudinary.config({ 
+    // eslint-disable-next-line @typescript-eslint/camelcase
     cloud_name: 'dsienryym', 
-    api_key: '836386262572753', 
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    api_key: '836386262572753',
+    // eslint-disable-next-line @typescript-eslint/camelcase 
     api_secret: 'fmB0KlxAqzjtafe9-ozZZhdk1Qc' 
   });
-  await app.listen(8000);
+  await app.listen(3000);
 }
 bootstrap();
