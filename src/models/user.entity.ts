@@ -1,6 +1,8 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn } from 'typeorm';
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { ROLES } from '../enums/roles.enum';
 import { Publication } from './publication.entity';
+import { Comment } from './comment.entity';
+import { Like } from './like.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -16,14 +18,21 @@ export class User extends BaseEntity {
     img: string;
     @Column({ type: 'varchar', default: ROLES.USER })
     rol: ROLES;
-    @Column({ type: 'timestamp', name: 'created_at' })
-    createdAt: Date;
     @Column({ type: 'bool', nullable: false })
     active: boolean;
-    @Column({ type: 'timestamp', name: 'updated_at' })
+    @Column({ type: 'varchar', nullable: false }) 
+    publicImgId: string;
+    @Column({ type: 'timestamp' })
+    createdAt: Date;
+    @Column({ type: 'timestamp' })
     updatedAt: Date;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     @OneToMany(type => Publication, publication => publication.user, { eager: true })
-    @JoinColumn()
     publications: Publication[];
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    @OneToMany(type => Comment, comment => comment.user, { eager: true })
+    comment: Comment[];
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    @OneToMany(type => Like, like => like.user, { eager: true })
+    likes: Like[];
 }

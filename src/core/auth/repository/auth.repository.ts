@@ -14,8 +14,8 @@ export class AuthRepository extends Repository<User> {
         user.password = await encryptPassword(password);
         user.email = email;
         user.img = "";
-        user.created_at = new Date();
-        user.updated_at = new Date();
+        user.createdAt = new Date();
+        user.updatedAt = new Date();
         try {
             await user.save();
             delete user.password;

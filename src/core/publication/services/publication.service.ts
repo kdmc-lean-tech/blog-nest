@@ -9,15 +9,15 @@ export class PublicationService {
     constructor(private _publicationRepository: PublicationRepository) {
     }
 
-    async getAllPublications(): Promise<Publication[]> {
+    public async getAllPublications(): Promise<Publication[]> {
         return await this._publicationRepository.getAllPublications();
     }
 
-    async createPublication(createPublicationDto: CreatePublicationDto, user: User): Promise<Publication> {
+    public async createPublication(createPublicationDto: CreatePublicationDto, user: User): Promise<Publication> {
         return await this._publicationRepository.createPublication(createPublicationDto, user);
     }
 
-    async updatePublicationById(id: number, createPublicationDto: CreatePublicationDto): Promise<Publication> {
+    public async updatePublicationById(id: number, createPublicationDto: CreatePublicationDto): Promise<Publication> {
         const publication = await this._publicationRepository.getPublicationById(id);
         if (!publication) {
             throw new NotFoundException(`The id ${id} not found`);
@@ -25,7 +25,7 @@ export class PublicationService {
         return await this._publicationRepository.updatePublicationById(publication, createPublicationDto);
     }
 
-    async getPublicationById(id: number): Promise<Publication> {
+    public async getPublicationById(id: number): Promise<Publication> {
         const publication = await this._publicationRepository.getPublicationById(id);
         if (!publication) {
             throw new NotFoundException(`The id ${id} not found`);
@@ -33,7 +33,7 @@ export class PublicationService {
         return await publication;
     }
 
-    async deletePublicationById(id: number): Promise<Publication> {
+    public async deletePublicationById(id: number): Promise<Publication> {
         const publication = await this._publicationRepository.getPublicationById(id);
         if (!publication) {
             throw new NotFoundException(`The id ${id} not found`);
@@ -41,11 +41,19 @@ export class PublicationService {
         return await this._publicationRepository.deletePublicationByEntity(publication);
     }
 
-    async fileUploadById(id: number, path: string): Promise<Publication> {
-        const publication = await this._publicationRepository.getPublicationById(id);
-        if (!publication) {
-            throw new NotFoundException(`The id ${id} not found`);
-        }
-        return this._publicationRepository.fileUpload(path, publication);
-    }
+    // async fileUploadById(id: number, path: string): Promise<Publication> {
+    //     const publication = await this._publicationRepository.getPublicationById(id);
+    //     if (!publication) {
+    //         throw new NotFoundException(`The id ${id} not found`);
+    //     }
+    //     return this._publicationRepository.fileUpload(path, publication);
+    // }
+
+    // async fileUploadById(id: number, paths: string[]) {
+    //     const publication = await this._publicationRepository.getPublicationById(id);
+    //     if (!publication) {
+    //         throw new NotFoundException(`The id ${id} not found`);
+    //     }
+    //     return this._publicationRepository.fileUpload(paths, publication);
+    // }
 }

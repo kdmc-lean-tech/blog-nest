@@ -11,11 +11,11 @@ export class AuthService {
     constructor(private _authRepository: AuthRepository, private _jwtService: JwtService) {
     }
 
-    async signUp(createUserDto: CreateUserDto): Promise<User> {
+    public async signUp(createUserDto: CreateUserDto): Promise<User> {
         return await this._authRepository.signUp(createUserDto);
     }
 
-    async signIn(credentialsDto: CredentialsDto): Promise<{ token: string }> {
+    public async signIn(credentialsDto: CredentialsDto): Promise<{ token: string }> {
         credentialsDto.password = decryptPasswordClient(credentialsDto.password); 
         const { email, password } = credentialsDto;
         const user = await this._authRepository.findOne({ email });

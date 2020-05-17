@@ -4,9 +4,10 @@ export class CreatePublicationDto {
     @IsNotEmpty()
     @MaxLength(50)
     title: string;
-    @IsNotEmpty()
-    @MaxLength(125)
-    subtitle: string;
+    @IsOptional()
+    tags: string[];
     @IsNotEmpty()
     content: string;
+    @IsNotEmpty()
+    idTrend: number;
 }
