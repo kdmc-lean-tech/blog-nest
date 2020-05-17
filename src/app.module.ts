@@ -22,6 +22,6 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(UserMiddleware)
-      .forRoutes('publication');
+      .forRoutes('publication', 'trend', 'user');
   }
 }
