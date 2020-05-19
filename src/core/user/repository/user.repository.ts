@@ -2,6 +2,8 @@ import { EntityRepository, Repository } from 'typeorm';
 import { User } from '../../../models/user.entity';
 import { uploadFileCloud, deleteImgCloud } from 'src/utils/upload-cloudinary';
 import { InternalServerErrorException } from '@nestjs/common';
+import { ChangePasswordDto } from 'src/dtos/change-password.dto';
+import { encryptPassword } from 'src/utils/encrypt.utils';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -13,6 +15,7 @@ export class UserRepository extends Repository<User> {
                 await deleteImgCloud(path, user.publicImgId);
                 user.img = result.secure_url;
                 user.publicImgId = result.public_id;
+                delete user.password;
                 user.save();
                 return user;
             } catch (err) {
@@ -24,4 +27,25 @@ export class UserRepository extends Repository<User> {
             throw new InternalServerErrorException(err);
         }
     }
+
+    public async getUsers(): Promise<User[]> {
+        const users = await this.createQueryBuilder("user")
+        .getMany();
+        users.forEach((user) => delete user.password);
+        return users;
+    }
+
+    public async changePassword(
+        changePasswordDto: ChangePasswordDto, user: User
+        ): Promise<User> {
+        const { password } = changePasswordDto;
+        user.password = await encryptPassword(password);
+        try {
+          await user.save();
+          delete user.password;
+          return user;
+        } catch (err) {
+          throw new InternalServerErrorException(err);
+        }
+      }
 }
