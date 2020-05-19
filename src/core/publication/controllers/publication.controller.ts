@@ -1,15 +1,16 @@
-import { Controller, Get, Body, UsePipes, ValidationPipe, Post, Put, Param, ParseIntPipe, Delete, UseGuards, /*UseInterceptors, UploadedFiles*/ } from '@nestjs/common';
+import { Controller, Get, Body, UsePipes, ValidationPipe, Post, Put, Param, ParseIntPipe, UseGuards, Patch, UseInterceptors, UploadedFiles, /*UseInterceptors, UploadedFiles*/ } from '@nestjs/common';
 import { PublicationService } from '../services/publication.service';
 import { CreatePublicationDto } from '../../../dtos/create-publication.dto';
-// import { diskStorage } from 'multer';
-// import { editFileName, imageFileFilter } from 'src/utils/file-upload.utils';
-// import { IFile } from '../../../interfaces/file';
+import { diskStorage } from 'multer';
+import { editFileName, imageFileFilter } from 'src/utils/file-upload.utils';
+import { IFile } from '../../../interfaces/file';
 import { AuthGuard } from '@nestjs/passport';
 import { ROLES } from '../../../enums/roles.enum';
 import { Roles } from '../../../decorators/roles.decorator';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from '../../../models/user.entity';
-// import { FilesInterceptor } from '@nestjs/platform-express';
+import { ActiveEntityDto } from 'src/dtos/active-entity.dto';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('publication')
 export class PublicationController {
@@ -49,43 +50,30 @@ export class PublicationController {
         return await this._publicationService.updatePublicationById(id, createPublicationDto);
     }
 
-    @Delete('/:id')
+    @Patch('/:id/active')
     @UseGuards(AuthGuard('jwt'))
     @Roles(ROLES.ADMIN)
-    async deletePublicationById(@Param('id', ParseIntPipe) id: number) {
-        return await this._publicationService.deletePublicationById(id);
+    async changeStatusTrend(
+        @Param('id', ParseIntPipe) id: number,
+        @Body() activeEntityDto: ActiveEntityDto
+    ) {
+        return await this._publicationService.changeStatusTrendById(id, activeEntityDto);
     }
 
-    // @Post('/upload/:id')
-    // @UseGuards(AuthGuard('jwt'))
-    // @Roles(ROLES.USER, ROLES.ADMIN)
-    // @UseInterceptors(FileInterceptor('file', {
-    //     storage: diskStorage({
-    //       destination: './uploads',
-    //       filename: editFileName,
-    //     }),
-    //     fileFilter: imageFileFilter,
-    //   }))
-    // async uploadFile(@UploadedFile() file: IFile, @Param('id', ParseIntPipe) id: number) {
-    //     if (file) {
-    //         return await this._publicationService.fileUploadById(id, file.path);
-    //     } 
-    // }
-
-    // @Post('/upload/:id')
-    // @UseInterceptors(FilesInterceptor('files', 20, {
-    //     storage: diskStorage({
-    //         destination: './uploads',
-    //         filename: editFileName 
-    //     }),
-    //     fileFilter: imageFileFilter
-    // }))
-    // async uploadFiles(
-    //     @UploadedFiles() files: IFile[],@Param('id', ParseIntPipe) id: number){
-    //     const paths = [];
-    //     files.forEach((file) => {
-    //         paths.push(file.path);
-    //     });
-    //     this._publicationService.fileUploadById(id, paths);
-    // }
+    @Post('/upload/:id')
+    @UseInterceptors(FilesInterceptor('files', 20, {
+        storage: diskStorage({
+            destination: './uploads',
+            filename: editFileName 
+        }),
+        fileFilter: imageFileFilter
+    }))
+    async uploadFiles(
+        @UploadedFiles() files: IFile[],@Param('id', ParseIntPipe) id: number){
+        const paths = [];
+        files.forEach((file) => {
+            paths.push(file.path);
+        });
+        return await this._publicationService.fileUploadById(id, paths);
+    }
 }

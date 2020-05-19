@@ -20,8 +20,6 @@ export class Publication extends BaseEntity{
     publicImgId: string[];
     @Column({ type: 'bool', nullable: false })
     active: boolean;
-    @Column({ type: 'int', nullable: false })
-    view: number;
     @Column({ type: 'timestamp', name: 'created_at' })
     createdAt: Date;
     @Column({ type: 'timestamp', name: 'updated_at' })

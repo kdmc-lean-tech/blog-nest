@@ -20,7 +20,7 @@ export class User extends BaseEntity {
     rol: ROLES;
     @Column({ type: 'bool', nullable: false })
     active: boolean;
-    @Column({ type: 'varchar', nullable: false }) 
+    @Column({ type: 'varchar', nullable: true }) 
     publicImgId: string;
     @Column({ type: 'timestamp' })
     createdAt: Date;

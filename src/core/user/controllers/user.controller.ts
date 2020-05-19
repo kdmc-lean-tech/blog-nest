@@ -1,4 +1,4 @@
-import { Controller, Patch, Body, Param, ParseIntPipe, UseGuards, Post, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Patch, Body, Param, ParseIntPipe, UseGuards, Post, UseInterceptors, UploadedFile, Get } from '@nestjs/common';
 import { ChangePasswordDto } from '../../../dtos/change-password.dto';
 import { UserService } from '../services/user.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -38,5 +38,12 @@ export class UserController {
         if (file) {
             return await this._userService.fileUploadById(id, file.path);
         } 
+    }
+
+    @Get()
+    @UseGuards(AuthGuard('jwt'))
+    @Roles(ROLES.USER, ROLES.ADMIN)
+    async getUsers() {
+      return await this._userService.getUsers();
     }
 }

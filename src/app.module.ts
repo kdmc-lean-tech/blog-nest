@@ -7,10 +7,18 @@ import { AuthModule } from './core/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './guards/roles/roles.guard';
 import { UserMiddleware } from './middlewares/user.middleware';
+import { TrendModule } from './core/trend/trend.module';
+import { UserModule } from './core/user/user.module';
 
 @Module({
-  imports: [PublicationModule, TypeOrmModule.forRoot(typeOrmOptions), 
-    MulterModule.register({ dest: './uploads' }), AuthModule],
+  imports: [
+    PublicationModule, 
+    TypeOrmModule.forRoot(typeOrmOptions), 
+    MulterModule.register({ dest: './uploads' }),
+    AuthModule,
+    TrendModule,
+    UserModule
+  ],
   providers: [
     {
       provide: APP_GUARD,

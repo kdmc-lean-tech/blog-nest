@@ -3,6 +3,7 @@ import { PublicationRepository } from '../repository/publication.repository';
 import { Publication } from '../../../models/publication.entity';
 import { CreatePublicationDto } from '../../../dtos/create-publication.dto';
 import { User } from '../../../models/user.entity';
+import { ActiveEntityDto } from 'src/dtos/active-entity.dto';
 
 @Injectable()
 export class PublicationService {
@@ -33,27 +34,19 @@ export class PublicationService {
         return await publication;
     }
 
-    public async deletePublicationById(id: number): Promise<Publication> {
+    public async changeStatusTrendById(id: number, activeEntityDto: ActiveEntityDto): Promise<Publication> {
         const publication = await this._publicationRepository.getPublicationById(id);
         if (!publication) {
             throw new NotFoundException(`The id ${id} not found`);
         }
-        return await this._publicationRepository.deletePublicationByEntity(publication);
+        return this._publicationRepository.changeStatusPublicationByEntity(publication, activeEntityDto);
     }
 
-    // async fileUploadById(id: number, path: string): Promise<Publication> {
-    //     const publication = await this._publicationRepository.getPublicationById(id);
-    //     if (!publication) {
-    //         throw new NotFoundException(`The id ${id} not found`);
-    //     }
-    //     return this._publicationRepository.fileUpload(path, publication);
-    // }
-
-    // async fileUploadById(id: number, paths: string[]) {
-    //     const publication = await this._publicationRepository.getPublicationById(id);
-    //     if (!publication) {
-    //         throw new NotFoundException(`The id ${id} not found`);
-    //     }
-    //     return this._publicationRepository.fileUpload(paths, publication);
-    // }
+    async fileUploadById(id: number, paths: string[]) {
+        const publication = await this._publicationRepository.getPublicationById(id);
+        if (!publication) {
+            throw new NotFoundException(`The id ${id} not found`);
+        }
+        return this._publicationRepository.fileUpload(paths, publication);
+    }
 }
