@@ -29,7 +29,7 @@
     "@types/passport-jwt": "^3.0.3",
     "bcrypt": "^4.0.1",
     "class-transformer": "^0.2.3",
-    "class-validator": "^0.12.1",
+    "class-validator": "^0.14.0",
     "cloudinary": "^1.21.0",
     "crypto-ts": "^1.0.2",
     "multer": "^1.4.2",
